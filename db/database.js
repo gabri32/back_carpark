@@ -1,5 +1,6 @@
-import 'dotenv/config';
 import { Sequelize } from 'sequelize';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const commonOptions = {
   dialect: 'postgres',
@@ -22,7 +23,7 @@ const sequelize = process.env.DATABASE_URL
   ? new Sequelize(process.env.DATABASE_URL, commonOptions)
   : new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD, {
       ...commonOptions,
-      host: process.env.DB_HOST || 'localhost',
+      host: process.env.DB_HOST ,
       port: Number(process.env.DB_PORT) || 5432
     });
 
