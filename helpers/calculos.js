@@ -4,31 +4,33 @@
 
 
 const calcularValorHora = ({ fecha_ini, fecha_salida, valor_hora, valor_extra }) => {
-    console.log(fecha_ini)
+  if(!fecha_ini|| !fecha_salida|| !valor_hora|| !valor_extra)
+  {
+    throw new Error("datos para calculo incompletos")
+  }
   const inicio = new Date(fecha_ini);
   const salida = new Date(fecha_salida);
-console.log(inicio,"aaaaaaaaaaa",salida)
   const diferenciaMs = salida - inicio;
-  const horas = diferenciaMs / (1000 * 60 * 60);
-
+  const horasDiff = diferenciaMs / (1000 * 60 * 60);
+  const horas = horasDiff < 1 ? 1 : horasDiff
   let total = 0;
 
   if (horas <= 1) {
     total = horas * valor_hora;
   } else {
     const horasNormales = 1;
-    const horasExtras = horas - 1;
-
+ 
+    const horasExtras = Math.ceil(horas) - 1;
     total = (horasNormales * valor_hora) + (horasExtras * valor_extra);
   }
 
   return {
-    horas: horas.toFixed(2),
+    horas: Math.ceil(horas),
     total: Math.round(total)
   };
 };
 
 
-export{
-   calcularValorHora 
+export {
+  calcularValorHora
 }
