@@ -11,11 +11,12 @@ import db from '../models/index.js';
 
 const Registro = async (req) => {
     try {
+        console.log(req.body)
         const { placa, gabeta, cascos } = req.body;
 
         // Validar que se recibieron los datos necesarios
-        if (!placa || !cascos) {
-            throw new Error('Faltan datos obligatorios:placa');
+        if (!placa) {
+            throw new Error('Faltan datos obligatorios');
         }
 
         const fecha = new Date()
@@ -48,7 +49,7 @@ const registrar_salida = async (req) => {
         if (!placa) {
             throw new Error("faltan valores de entrada")
         }
-        const moto = await db.Motos.findOne({where:{placa:placa}})
+        const moto = await db.Motos.findOne({ where: { placa: placa } })
         // const motoValid = 
         const data = await db.Precio.findOne();
         const fecha_ini = moto.fecha_ingreso;
@@ -73,10 +74,35 @@ const MotosActuales = async () => {
         throw error
     }
 }
+const salidaFinal = async ({ id_moto, valor_salida }) => {
+    try {
 
+        const fecha_salida = new Date();
 
+        const [actualizado] = await db.Motos.update(
+            {
+                valor_salida,
+                fecha_salida
+            },
+            {
+                where: { id_moto }
+            }
+        );
+
+        if (!actualizado) {
+            throw new Error('Moto no encontrada');
+        }
+
+        return await db.Motos.findByPk(id_moto);
+
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+};
 export {
     Registro,
     registrar_salida,
-    MotosActuales
+    MotosActuales,
+    salidaFinal
 };
